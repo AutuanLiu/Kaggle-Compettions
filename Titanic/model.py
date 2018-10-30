@@ -150,8 +150,7 @@ for epoch in range(num_epoch):
     # print(f'epoch: {epoch+1}, --> train loss: {loss.item():.4f}')
 with torch.no_grad():
     pred1 = net(torch.from_numpy(X_valid).cuda()).cpu().numpy()
-pred1[pred1 >= 0.5] = 1
-pred1[pred1 < 0.5] = 0
+pred1 = np.round(pred1)
 acc = accuracy_score(y_valid, pred1)
 print(f'MLP accuracy: {acc}')
 
@@ -182,8 +181,7 @@ pred = gbm.predict(X_test, num_iteration=gbm.best_iteration_)  # 使用lightGBM�
 ensemble += [pred.reshape(-1,)]
 with torch.no_grad():
     pred = net(torch.from_numpy(X_test).cuda()).cpu().numpy()  # 使用MLP
-pred[pred > 0.5] = 1
-pred[pred <= 0.5] = 0
+pred = np.round(pred)
 ensemble += [pred.reshape(-1,)]
 pred = cmlp.predict(X_test)  # 使用 MLP C
 ensemble += [pred.reshape(-1,)]
