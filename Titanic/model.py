@@ -125,7 +125,7 @@ print(f'LGBMClassifier accuracy is {accuracy_score(y_valid, y_pred)}')
 
 # 5 MLP
 dev = torch.device('cuda')
-net = MLP(15).to(dev)
+net = MLP(16).to(dev)
 criterion = nn.BCELoss()
 opt = optim.Adam(net.parameters(), lr=0.001)
 lr_deacy = optim.lr_scheduler.StepLR(opt, 20)
