@@ -49,9 +49,9 @@ print(f'LogisticRegression accuracy is {acc}.')
 
 # 2 构造模型 xgboost
 param = {
-    "max_depth": 3, 
+    "max_depth": 6, 
     "learning_rate": 0.1, 
-    "n_estimators": 100, 
+    "n_estimators": 500, 
     "silent": True, 
     "objective": 'binary:logistic', 
     "booster": 'gbtree'
@@ -125,7 +125,7 @@ print(f'LGBMClassifier accuracy is {accuracy_score(y_valid, y_pred)}')
 
 # 5 MLP
 dev = torch.device('cuda')
-net = MLP(16).to(dev)
+net = MLP(17).to(dev)
 criterion = nn.BCELoss()
 opt = optim.Adam(net.parameters(), lr=0.001)
 lr_deacy = optim.lr_scheduler.StepLR(opt, 20)
