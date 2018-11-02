@@ -10,7 +10,7 @@ import pandas as pd
 import seaborn as sns
 from catboost import CatBoostRegressor
 from lightgbm import LGBMRegressor
-from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
+from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor, AdaBoostRegressor, BaggingRegressor, ExtraTreesRegressor
 from sklearn.linear_model import ElasticNet, Lasso
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
@@ -38,7 +38,11 @@ X_train, X_valid, y_train, y_valid = train_test_split(
     X_train, y_train, test_size=0.2, random_state=0)
 
 MLA1 = [
-    GradientBoostingRegressor(n_estimators=3000, learning_rate=0.05, max_depth=4, max_features='sqrt',
+    # BaggingRegressor(n_estimators=3000, random_state=0),
+    # ExtraTreesRegressor(n_estimators=3000, max_depth=4, random_state=1),
+    # AdaBoostRegressor(n_estimators=3000, learning_rate=0.05,
+    #                   loss='square', random_state=5),
+    GradientBoostingRegressor(n_estimators=3000, learning_rate=0.01, max_depth=5, max_features='sqrt',
                               min_samples_leaf=15, min_samples_split=10, loss='huber', random_state=5),
     # make_pipeline(RobustScaler(), ElasticNet(
     #     alpha=0.0005, l1_ratio=.9, random_state=3)),
@@ -46,11 +50,11 @@ MLA1 = [
     # RandomForestRegressor(n_estimators=20)
 ]
 MLA2 = [
-    XGBRegressor(olsample_bytree=0.4603, gamma=0.0468, learning_rate=0.05, max_depth=3, min_child_weight=1.7817,
-                 n_estimators=2200, reg_alpha=0.4640, reg_lambda=0.8571, subsample=0.5213, silent=1, random_state=7, nthread=-1, verbose=False),
-    # CatBoostRegressor(iterations=500, learning_rate=0.1, depth=6, loss_function='RMSE', random_state=123,
+    XGBRegressor(olsample_bytree=0.4603, gamma=0.0468, learning_rate=0.01, n_estimators=3000, max_depth=5, min_child_weight=1.7817,
+                 reg_alpha=0.464, reg_lambda=0.8571, subsample=0.5213, silent=1, random_state=123, nthread=-1, verbose=False),
+    # CatBoostRegressor(iterations=500, learning_rate=0.01, depth=6, loss_function='RMSE', random_state=123,
     #                   leaf_estimation_method='Gradient', train_dir='log', verbose=False),
-    LGBMRegressor(objective='regression', num_leaves=5, learning_rate=0.05, n_estimators=720, max_bin=55, bagging_fraction=0.8,
+    LGBMRegressor(objective='regression', num_leaves=5, learning_rate=0.01, n_estimators=3000, max_bin=55, bagging_fraction=0.8,
                   bagging_freq=5, feature_fraction=0.2319, feature_fraction_seed=9, bagging_seed=9, min_data_in_leaf=6, min_sum_hessian_in_leaf=11)
 ]
 
@@ -64,7 +68,8 @@ for m in MLA1:
     print(rmse)
 
 for m in MLA2:
-    m.fit(X_train, y_train, early_stopping_rounds=20, eval_set=[(X_valid, y_valid)], verbose=False)
+    m.fit(X_train, y_train, early_stopping_rounds=20,
+          eval_set=[(X_valid, y_valid)], verbose=False)
     y_pred = m.predict(X_valid)
     rmse = np.sqrt(mean_squared_error(y_valid, y_pred))
     pred += np.exp(m.predict(X_test))
