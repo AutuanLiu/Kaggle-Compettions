@@ -47,7 +47,7 @@ MLA1 = [
     # make_pipeline(RobustScaler(), ElasticNet(
     #     alpha=0.0005, l1_ratio=.9, random_state=3)),
     # make_pipeline(RobustScaler(), Lasso(alpha=0.0005, random_state=1)),
-    # RandomForestRegressor(n_estimators=20)
+    RandomForestRegressor(n_estimators=20)
 ]
 MLA2 = [
     XGBRegressor(olsample_bytree=0.4603, gamma=0.0468, learning_rate=0.01, n_estimators=3000, max_depth=5, min_child_weight=1.7817,

@@ -18,7 +18,7 @@ from sklearn.model_selection import train_test_split, KFold
 from sklearn.linear_model import LogisticRegression
 from lightgbm import LGBMClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
 
 # 导入数据
 datadir = 'dataset/'
@@ -46,6 +46,20 @@ clf.fit(X_train, y_train)
 pred_val = clf.predict(X_valid)
 acc = acc = accuracy_score(y_valid, pred_val)
 print(f'LogisticRegression accuracy is {acc}.')
+
+# 1 构建模型 逻辑回归
+clf1 = AdaBoostClassifier()
+clf1.fit(X_train, y_train)
+pred_val = clf1.predict(X_valid)
+acc = acc = accuracy_score(y_valid, pred_val)
+print(f'AdaBoostClassifier accuracy is {acc}.')
+
+# 1 构建模型 逻辑回归
+clf2 = GradientBoostingClassifier()
+clf2.fit(X_train, y_train)
+pred_val = clf2.predict(X_valid)
+acc = acc = accuracy_score(y_valid, pred_val)
+print(f'GradientBoostingClassifier accuracy is {acc}.')
 
 # 2 构造模型 xgboost
 param = {
@@ -171,20 +185,24 @@ print(f'sklearn RF tree accuracy: {acc}')
 # 保存预测结果
 # 记录 各个模型的预测结果用作最后的ensemble
 ensemble = []
-pred = clf.predict(X_test)  # 使用逻辑回归
-ensemble += [pred.reshape(-1,)]
-pred = xgbc.predict(X_test) # 使用xgboost模型
-ensemble += [pred.reshape(-1,)]
-pred = model.predict(X_test, prediction_type='Class')  # 使用catboost 
-ensemble += [pred.reshape(-1,)]
+# pred = clf.predict(X_test)  # 使用逻辑回归
+# ensemble += [pred.reshape(-1,)]
+# pred = clf1.predict(X_test)
+# ensemble += [pred.reshape(-1,)]
+# pred = clf2.predict(X_test)
+# ensemble += [pred.reshape(-1,)]
+# pred = xgbc.predict(X_test) # 使用xgboost模型
+# ensemble += [pred.reshape(-1,)]
+# pred = model.predict(X_test, prediction_type='Class')  # 使用catboost 
+# ensemble += [pred.reshape(-1,)]
 pred = gbm.predict(X_test, num_iteration=gbm.best_iteration_)  # 使用lightGBM模型
 ensemble += [pred.reshape(-1,)]
-with torch.no_grad():
-    pred = net(torch.from_numpy(X_test).cuda()).cpu().numpy()  # 使用MLP
-pred = np.round(pred)
-ensemble += [pred.reshape(-1,)]
-pred = cmlp.predict(X_test)  # 使用 MLP C
-ensemble += [pred.reshape(-1,)]
+# with torch.no_grad():
+#    pred = net(torch.from_numpy(X_test).cuda()).cpu().numpy()  # 使用MLP
+# pred = np.round(pred)
+# ensemble += [pred.reshape(-1,)]
+# pred = cmlp.predict(X_test)  # 使用 MLP C
+# ensemble += [pred.reshape(-1,)]
 pred = crf.predict(X_test)  # 使用 RF
 ensemble += [pred.reshape(-1,)]
 
