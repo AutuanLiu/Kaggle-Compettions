@@ -16,5 +16,5 @@ conda env create -f environment.yml
 ## 2 House Prices
 [House Prices: Advanced Regression Techniques | Kaggle](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)
 
-## 3 Google Analytics Customer Revenue Prediction
-[Google Analytics Customer Revenue Prediction | Kaggle](https://www.kaggle.com/c/ga-customer-revenue-prediction/data)
+## 3 PLAsTiCC Astronomical Classification
+http://localhost:2534/tree/PLAsTiCC%20Astronomical%20Classification/plasticc-kit
