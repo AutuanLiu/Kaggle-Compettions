@@ -139,7 +139,7 @@ print(f'LGBMClassifier accuracy is {accuracy_score(y_valid, y_pred)}')
 
 # 5 MLP
 dev = torch.device('cuda')
-net = MLP(17).to(dev)
+net = MLP(8).to(dev)
 criterion = nn.BCELoss()
 opt = optim.Adam(net.parameters(), lr=0.001)
 lr_deacy = optim.lr_scheduler.StepLR(opt, 20)
@@ -185,16 +185,16 @@ print(f'sklearn RF tree accuracy: {acc}')
 # 保存预测结果
 # 记录 各个模型的预测结果用作最后的ensemble
 ensemble = []
-# pred = clf.predict(X_test)  # 使用逻辑回归
-# ensemble += [pred.reshape(-1,)]
-# pred = clf1.predict(X_test)
-# ensemble += [pred.reshape(-1,)]
-# pred = clf2.predict(X_test)
-# ensemble += [pred.reshape(-1,)]
-# pred = xgbc.predict(X_test) # 使用xgboost模型
-# ensemble += [pred.reshape(-1,)]
-# pred = model.predict(X_test, prediction_type='Class')  # 使用catboost 
-# ensemble += [pred.reshape(-1,)]
+pred = clf.predict(X_test)  # 使用逻辑回归
+ensemble += [pred.reshape(-1,)]
+pred = clf1.predict(X_test)
+ensemble += [pred.reshape(-1,)]
+pred = clf2.predict(X_test)
+ensemble += [pred.reshape(-1,)]
+pred = xgbc.predict(X_test) # 使用xgboost模型
+ensemble += [pred.reshape(-1,)]
+pred = model.predict(X_test, prediction_type='Class')  # 使用catboost 
+ensemble += [pred.reshape(-1,)]
 pred = gbm.predict(X_test, num_iteration=gbm.best_iteration_)  # 使用lightGBM模型
 ensemble += [pred.reshape(-1,)]
 # with torch.no_grad():
